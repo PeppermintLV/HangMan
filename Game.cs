@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hangman
 {
     class Game
     {
         List<string> wordList = new List<string>();
-
+        char[] word;
+        char[] result;
+        private bool _gameNoStop = true;
         //Game starts
         public void PlayGame()
         {
@@ -19,7 +22,10 @@ namespace Hangman
         private void Greeting()
         {
             Console.WriteLine("WELCOME TO THE HANGMAN GAME!");
-            Console.Write("What's your name? "); var userName = Console.ReadLine();
+            Console.Write("What's your name? ");
+
+            var userName = Console.ReadLine();
+
             Console.WriteLine($"Great! Let's begin, {userName}!");
             Console.WriteLine();
         }
@@ -40,11 +46,20 @@ namespace Hangman
         {
             Random random = new Random();
             int randomWordNumber = random.Next(1, wordList.Count);
-            Console.WriteLine($"This word contains {wordList[randomWordNumber].Length} letters.");
-            for (int i = 0; i <= wordList[randomWordNumber].Length; i++)
+
+            word = wordList[randomWordNumber].ToCharArray();
+            result = new char[wordList[randomWordNumber].Length];
+
+            Console.WriteLine($"This word contains {word.Length} letters.");
+
+            for (int i = 0; i <= word.Length - 1; i++)
             {
-                Console.Write("_");
+                result[i] = '_';
             };
+
+            Console.Clear();
+            Console.WriteLine("WELCOME TO THE HANGMAN GAME!");
+            Console.WriteLine(result);
             Console.WriteLine();
         }
 
@@ -54,17 +69,32 @@ namespace Hangman
         //After that there are two options: whether the letter is or is not a part of the word.
         private void GuessWord()
         {
-            Console.WriteLine();
-            Console.Write("Guess a letter: "); string userLetter = Console.ReadLine();
-
-            if (!ValidateInput(userLetter))
+            while (_gameNoStop)
             {
-                while (!ValidateInput(userLetter))
+                Console.WriteLine();
+                Console.Write("Guess a letter: ");
+
+                string userLetter = Console.ReadLine();
+
+                if (!ValidateInput(userLetter))
                 {
-                    Console.Write("You have to guess by one letter! Guess again: ");
-                    userLetter = Console.ReadLine();
+                    while (!ValidateInput(userLetter))
+                    {
+                        Console.Write("You have to guess by one letter! Guess again: ");
+                        userLetter = Console.ReadLine();
+                    }
                 }
+                var letter = userLetter.ToCharArray();
+                updateWord(letter[0]);
+
+                Console.Clear();
+                Console.WriteLine("WELCOME TO THE HANGMAN GAME!");
+                Console.WriteLine(result);
+
+                _gameNoStop = result.Any(m => m == '_');
             }
+
+            Console.WriteLine("You WON!");
         }
 
         //Validation whether the user input is correct (needs to be a single character, and the character has to be a letter)
@@ -86,6 +116,17 @@ namespace Hangman
                 return false;
             }
             return true;
+        }
+
+        private void updateWord(char letter)
+        {
+            for (int i = 0; i <= word.Length - 1; i++)
+            {
+                if (word[i] == letter)
+                {
+                    result[i] = word[i];
+                }
+            }
         }
     }
 }
