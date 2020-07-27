@@ -4,3 +4,6 @@
 
 /.vs/HangMan/v16/Server/sqlite3
 /obj
+/bin/Debug/netcoreapp3.1
+/.vs/HangMan/DesignTimeBuild
+/.vs/HangMan/v16

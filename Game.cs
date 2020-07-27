@@ -10,6 +10,7 @@ namespace Hangman
         List<string> wordList = new List<string>();
         char[] word;
         char[] result;
+        int lives;
 
         //Game starts
         public void PlayGame()
@@ -49,7 +50,7 @@ namespace Hangman
         {
             Random random = new Random();
             int randomWordNumber = random.Next(1, wordList.Count);
-
+            lives = 10;
             word = wordList[randomWordNumber].ToCharArray();
             result = new char[wordList[randomWordNumber].Length];
 
@@ -60,6 +61,15 @@ namespace Hangman
 
             Console.Clear();
             Console.WriteLine("LET'S PLAY THE HANGMAN GAME!");
+            Console.Write("Lives left: ");
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            for (int i = 0; i < lives; i++)
+            {                
+                Console.Write("* ");                
+            }
+
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine(result);
         }
@@ -69,7 +79,7 @@ namespace Hangman
         {
             GetWord();
             bool _gameNoStop = true;
-            while (_gameNoStop)
+            while (_gameNoStop || lives < 1)
             {
                 Console.WriteLine();
                 Console.Write("Guess a letter: ");
@@ -87,13 +97,28 @@ namespace Hangman
                 var letter = userLetter.ToCharArray();
                 updateWord(letter[0]);
 
+                if (!word.Any(m => m == letter[0]))
+                {
+                    lives--;
+                }
+
                 Console.Clear();
                 Console.WriteLine("LET'S PLAY THE HANGMAN GAME!");
+                Console.Write("Lives left: ");
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                for (int i = 0; i < lives; i++)
+                {
+                    Console.Write("* ");
+                }
+
+                Console.ResetColor();
                 Console.WriteLine();
                 Console.WriteLine(result);
+                Console.WriteLine(word);
 
-                _gameNoStop = result.Any(m => m == '_');             
-             }
+                _gameNoStop = result.Any(m => m == '_');
+            }
             if (!_gameNoStop)
             {
                 Console.WriteLine(); Console.ForegroundColor = ConsoleColor.Green;
