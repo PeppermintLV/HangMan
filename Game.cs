@@ -24,13 +24,13 @@ namespace Hangman
         //Greeting the player, explaining rules        
         private void Greeting()
         {
-            Console.WriteLine("WELCOME TO THE HANGMAN GAME!"); Console.WriteLine(); 
-            Console.WriteLine("GAME DESCRIPTION:"); 
-            Console.WriteLine("1. The computer chooses a word from a secret list."); 
+            Console.WriteLine("WELCOME TO THE HANGMAN GAME!"); Console.WriteLine();
+            Console.WriteLine("GAME DESCRIPTION:");
+            Console.WriteLine("1. The computer chooses a word from a secret list.");
             Console.WriteLine("2. You have to guess the word until your lives run out."); Console.WriteLine();
             Console.WriteLine("Press any key to continue.");
             Console.ReadKey(); Console.SetCursorPosition(0, 7);
-            Console.ForegroundColor = ConsoleColor.Green;            
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Good luck!"); Thread.Sleep(1000); Console.ResetColor();
         }
 
@@ -51,7 +51,7 @@ namespace Hangman
         private void GetWord()
         {
             Random random = new Random();
-            int randomWordNumber = random.Next(1, wordList.Count);
+            int randomWordNumber = random.Next(0, wordList.Count);
             lives = 10;
             word = wordList[randomWordNumber].ToCharArray();
             result = new char[wordList[randomWordNumber].Length];
@@ -67,8 +67,8 @@ namespace Hangman
             Console.ForegroundColor = ConsoleColor.Red;
 
             for (int i = 0; i < lives; i++)
-            {                
-                Console.Write("* ");                
+            {
+                Console.Write("* ");
             }
 
             Console.ResetColor();
@@ -89,15 +89,13 @@ namespace Hangman
 
                 string userLetter = Console.ReadLine();
 
-                //if (!ValidateInput(userLetter))
-                //{
-                    while (!ValidateInput(userLetter))
-                    {
-                        //You have to guess by one letter!
-                        Console.Write("Guess again: ");
-                        userLetter = Console.ReadLine();
-                    }
-                //}
+                while (!ValidateInput(userLetter))
+                {
+                    
+                    Console.Write("Guess again: ");
+                    userLetter = Console.ReadLine();
+                }
+               
                 var letter = userLetter.ToCharArray();
                 updateWord(letter[0]);
 
@@ -119,7 +117,6 @@ namespace Hangman
                 Console.ResetColor();
                 Console.WriteLine();
                 Console.WriteLine(result);
-                
 
                 _gameNoStop = result.Any(m => m == '_');
             }
@@ -176,7 +173,7 @@ namespace Hangman
             }
 
             letterInputs.Add(input);
-            return true;            
+            return true;
         }
 
         //Updating the word after each guess
@@ -194,15 +191,15 @@ namespace Hangman
         //Asking the user if he/she wants to continue playing the game. Input has to be 'y' or 'n'.
         private void ContinueGame()
         {
-            Console.WriteLine(); 
-            Console.Write("Continue game? (y/n): "); 
+            Console.WriteLine();
+            Console.Write("Continue game? (y/n): ");
 
             var userAnswer = Console.ReadLine();
 
             while (userAnswer != "y" && userAnswer != "n")
-            {            
-            Console.Write("Continue game? (y/n): "); 
-            userAnswer = Console.ReadLine();
+            {
+                Console.Write("Continue game? (y/n): ");
+                userAnswer = Console.ReadLine();
             }
 
             if (userAnswer == "n")
