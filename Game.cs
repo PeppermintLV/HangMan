@@ -7,7 +7,8 @@ namespace Hangman
 {
     class Game
     {
-        List<string> wordList = new List<string>();
+        List<string> wordList;
+        List<string> letterInputs;
         char[] word;
         char[] result;
         int lives;
@@ -36,6 +37,7 @@ namespace Hangman
         //Adding words to the list
         private void AddWords()
         {
+            wordList = new List<string>();
             wordList.Add("science");
             wordList.Add("mobility");
             wordList.Add("obvious");
@@ -78,6 +80,7 @@ namespace Hangman
         private void GuessWord()
         {
             GetWord();
+            letterInputs = new List<string>();
             bool _gameNoStop = true;
             while (_gameNoStop || lives < 1)
             {
@@ -86,14 +89,15 @@ namespace Hangman
 
                 string userLetter = Console.ReadLine();
 
-                if (!ValidateInput(userLetter))
-                {
+                //if (!ValidateInput(userLetter))
+                //{
                     while (!ValidateInput(userLetter))
                     {
-                        Console.Write("You have to guess by one letter! Guess again: ");
+                        //You have to guess by one letter!
+                        Console.Write("Guess again: ");
                         userLetter = Console.ReadLine();
                     }
-                }
+                //}
                 var letter = userLetter.ToCharArray();
                 updateWord(letter[0]);
 
@@ -127,25 +131,45 @@ namespace Hangman
             }
         }
 
-        //Validation whether the user input is correct (needs to be a single character, and the character has to be a letter)
+        //Validation whether the user input is correct
         private bool ValidateInput(string input)
         {
+            //Checking if there is any input
+            if (string.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("Your input was empty!");
+                return false;
+            }
+
+            //If input is 1 character
+            if (input.Length > 1)
+            {
+                Console.WriteLine("Your input was more than 1 character long!");
+                return false;
+            }
+
+            //If the character is letter
             foreach (char c in input)
             {
                 if (!Char.IsLetter(c))
                 {
+                    Console.WriteLine("Your input was not a letter!");
                     return false;
                 }
             }
-            if (input.Length != 1)
+
+            //If the letter hasn't been guessed yet
+            foreach (string item in letterInputs)
             {
-                return false;
+                if (input == item)
+                {
+                    Console.WriteLine("You already guessed this letter!");
+                    return false;
+                }
             }
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
-            return true;
+
+            letterInputs.Add(input);
+            return true;            
         }
 
         //Updating the word after each guess
