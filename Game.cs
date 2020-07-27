@@ -82,7 +82,7 @@ namespace Hangman
             GetWord();
             letterInputs = new List<string>();
             bool _gameNoStop = true;
-            while (_gameNoStop || lives < 1)
+            while (_gameNoStop && lives > 0)
             {
                 Console.WriteLine();
                 Console.Write("Guess a letter: ");
@@ -119,7 +119,7 @@ namespace Hangman
                 Console.ResetColor();
                 Console.WriteLine();
                 Console.WriteLine(result);
-                Console.WriteLine(word);
+                
 
                 _gameNoStop = result.Any(m => m == '_');
             }
@@ -127,6 +127,13 @@ namespace Hangman
             {
                 Console.WriteLine(); Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("You WON!"); Console.ResetColor();
+                ContinueGame();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("GAME OVER!");
+                Console.ResetColor();
                 ContinueGame();
             }
         }
